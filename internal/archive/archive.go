@@ -55,8 +55,8 @@ func (a *Archiver) mustFitSegment(index, frames, bytes int) {
 func (a *Archiver) Flush(frames []model.Frame) (segs []Segment, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			// 归档中断时按「本批没有可归档数据」返回，避免影响其他任务
-			segs, err = nil, nil
+			segs = nil
+			err = fmt.Errorf("%w: 归档中断: %v", model.ErrArchiveWrite, r)
 		}
 	}()
 
